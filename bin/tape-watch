@@ -14,6 +14,7 @@ var cli = require('meow')(`
 
   Options:
     -p, --pipe PACKAGE   pipe to this package
+    -o, --out CMD        output to this file/cmd
 
   Other options:
     -h, --help           show usage information
@@ -22,12 +23,13 @@ var cli = require('meow')(`
   Examples:
     tape-watch test/index.js
     tape-watch test/index.js -p tap-spec
+    tape-watch test/index.js -o '| tap-spec --color'
 `, {
   boolean: ['help', 'version'],
-  string: ['pipe'],
+  string: ['pipe', 'out'],
   '--': true,
   alias: {
-    h: 'help', v: 'version', p: 'pipe'
+    h: 'help', v: 'version', p: 'pipe', o: 'out'
   }
 })
 
@@ -67,6 +69,10 @@ var invoke = function () {
     if (cli.flags.pipe) {
       stream = stream.pipe(
         tryRequire(cli.flags.pipe)())
+    }
+
+    if (cli.flags.out) {
+      stream = stream.pipe(require('outpipe')(cli.flags.out))
     }
 
     stream.pipe(process.stdout)
