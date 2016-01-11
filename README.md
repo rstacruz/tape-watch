@@ -14,7 +14,7 @@ tape-watch is an auto-test runner for [tape]. It will re-run your tests when any
 Can happily live in your project (`--save-dev`) or globally (`-g`). I prefer global, since it's compatible with every project with [tape][] in it.
 
 ```
-npm install -g tape-run
+npm install -g tape-watch
 ```
 
 [tape]: https://github.com/substack/tape
