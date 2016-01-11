@@ -1,6 +1,5 @@
 var test = require('tape')
 var spawn = require('child_process').spawn
-var path = require('path')
 
 test('things', function (t) {
   var proc = spawnTest(['fixtures/othertest.js'], function (output) {
@@ -17,6 +16,8 @@ test('things', function (t) {
     proc.kill('SIGHUP')
   }, 1000)
 })
+
+test('standard', require('tape-standard')())
 
 function spawnTest (args, fn) {
   var proc = spawn('./bin/tape-watch', args)
