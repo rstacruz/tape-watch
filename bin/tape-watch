@@ -10,12 +10,14 @@ var stream = require('stream')
 
 var cli = require('meow')(`
   Usage:
-    $ tape-watch [file] [options] --  [options for the test]
+    $ tape-watch [file] [options] -- [options for the test]
 
   Options:
-    -p, --pipe pkg   pipe to this package
-    -h, --help       show usage information
-    -v, --version    print version info and exit
+    -p, --pipe PACKAGE   pipe to this package
+
+  Other options:
+    -h, --help           show usage information
+    -v, --version        print version info and exit
 
   Examples:
     tape-watch test/index.js
@@ -64,7 +66,7 @@ var invoke = function () {
 
     if (cli.flags.pipe) {
       stream = stream.pipe(
-        require(path.join(cwd, 'node_modules', cli.flags.pipe))())
+        tryRequire(cli.flags.pipe)())
     }
 
     stream.pipe(process.stdout)
@@ -76,8 +78,16 @@ var invoke = function () {
   })
 }
 
+function tryRequire (pkg) {
+  try {
+    return require(pkg)
+  } catch (e) {
+    return require(path.join(cwd, 'node_modules', pkg))
+  }
+}
+
 function tape () {
-  return require(path.join(cwd, 'node_modules', 'tape'))
+  return tryRequire('tape')
 }
 
 /*
