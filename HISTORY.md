@@ -1,3 +1,10 @@
+## [v1.1.0]
+> Jan 11, 2016
+
+- Fix 'no tests' problem.
+
+[v1.1.0]: https://github.com/rstacruz/tape-watch/compare/v1.0.0...v1.1.0
+
 ## [v1.0.0]
 > Jan 11, 2016
 
