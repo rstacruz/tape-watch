@@ -1,3 +1,10 @@
+## [v1.2.0]
+> Jan 11, 2016
+
+- Add `--refresh` support.
+
+[v1.2.0]: https://github.com/rstacruz/tape-watch/compare/v1.1.0...v1.2.0
+
 ## [v1.1.0]
 > Jan 11, 2016
 
