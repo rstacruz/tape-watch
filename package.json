@@ -1,15 +1,13 @@
 {
   "name": "tape-watch",
-  "version": "1.0.0",
   "description": "Reruns tape tests when files change",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "version": "1.0.0",
   "author": "Rico Sta. Cruz <rico@ricostacruz.com>",
-  "license": "MIT",
   "bin": {
     "tape-watch": "bin/tape-watch"
+  },
+  "bugs": {
+    "url": "https://github.com/rstacruz/tape-watch/issues"
   },
   "dependencies": {
     "chokidar": "1.4.2",
@@ -21,17 +19,19 @@
     "simpler-debounce": "1.0.0"
   },
   "devDependencies": {},
+  "homepage": "https://github.com/rstacruz/tape-watch#readme",
+  "keywords": [
+    "tape",
+    "test",
+    "watch"
+  ],
+  "license": "MIT",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rstacruz/tape-watch.git"
   },
-  "keywords": [
-    "tape",
-    "watch",
-    "test"
-  ],
-  "bugs": {
-    "url": "https://github.com/rstacruz/tape-watch/issues"
-  },
-  "homepage": "https://github.com/rstacruz/tape-watch#readme"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
