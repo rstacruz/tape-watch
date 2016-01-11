@@ -6,19 +6,36 @@ var once = require('once')
 var debug = require('debug')('tape-watch')
 var mutex = require('../lib/mutex')
 var wait = require('../lib/wait')
+var stream = require('stream')
 
-var watcher = chokidar.watch('.', {
-  ignored: /[\/\\]\.|node_modules/,
-  persistent: true,
-  ignoreInitial: true
+var cli = require('meow')(`
+  Usage:
+    $ tape-watch [file] [options] --  [options for the test]
+
+  Options:
+    -p, --pipe pkg   pipe to this package
+    -h, --help       show usage information
+    -v, --version    print version info and exit
+
+  Examples:
+    tape-watch test/index.js
+    tape-watch test/index.js -p tap-spec
+`, {
+  boolean: ['help', 'version'],
+  string: ['pipe'],
+  '--': true,
+  alias: {
+    h: 'help', v: 'version', p: 'pipe'
+  }
 })
 
-var filename = process.argv[2]
+var filename = cli.input[0]
 var cwd = process.cwd()
-process.argv.splice(2, 1)
+process.argv = cli.input.slice(1)
 
 var report = debounce(mutex(function (files) {
   debug('start', files.map(function (file) { return file[0] }))
+
   return invoke()
     .then(function (ok) {
       debug('done')
@@ -27,6 +44,9 @@ var report = debounce(mutex(function (files) {
       debug('error')
       console.error(err.stack || err.message || err)
     })
+    .then(function () {
+      // cleanup
+    })
     .then(wait(250))
     .then(function () {
       debug('listening again')
@@ -34,20 +54,35 @@ var report = debounce(mutex(function (files) {
 }), 25)
 
 /*
- * invoke the test
+ * invoke the test. installs a tape hook to listen for when tests finish.
  */
 
 var invoke = function () {
   return new Promise (function (resolve, reject) {
     flush()
-    var tape = require(path.join(cwd, 'node_modules', 'tape'))
-    tape.onFinish(once(resolve))
+    var stream = tape().createStream()
+
+    if (cli.flags.pipe) {
+      stream = stream.pipe(
+        require(path.join(cwd, 'node_modules', cli.flags.pipe))())
+    }
+
+    stream.pipe(process.stdout)
+    tape().onFinish(once(function () {
+      tape().getHarness().close()
+      resolve()
+    }))
     require(path.join(cwd, filename))
   })
 }
 
+function tape () {
+  return require(path.join(cwd, 'node_modules', 'tape'))
+}
+
 /*
- * delete require cache
+ * delete require cache for any app code (non-modules) and tape itself.
+ * we need to clear out tape so that its state is reset.
  */
 
 function flush () {
@@ -58,6 +93,12 @@ function flush () {
     }
   }))
 }
+
+var watcher = chokidar.watch('.', {
+  ignored: /[\/\\]\.|node_modules/,
+  persistent: true,
+  ignoreInitial: true
+})
 
 watcher.on('change', report)
 watcher.on('add', report)
