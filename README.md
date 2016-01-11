@@ -4,6 +4,8 @@
 
 tape-watch is an auto-test runner for [tape]. It will re-run your tests when any of the files in your project changes. This is better than using [watch][] or [nodemon][]: it will reload your tests in the same Node.js process, saving you precious startup time.
 
+[![Status](https://travis-ci.org/rstacruz/tape-watch.svg?branch=master)](https://travis-ci.org/rstacruz/tape-watch "See test builds")
+
 [nodemon]: https://www.npmjs.com/package/nodemon
 [watch]: https://www.npmjs.com/package/watch
 
