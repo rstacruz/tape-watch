@@ -8,27 +8,27 @@ var mutex = require('../lib/mutex')
 var wait = require('../lib/wait')
 var stream = require('stream')
 
-var cli = require('meow')(`
-  Usage:
-    $ tape-watch [file] [options] -- [options for the test]
-
-  Options:
-    -p, --pipe PACKAGE        pipe to this package
-    -o, --out CMD             output to this file/cmd
-    -r, --refresh PACKAGE     ensure this PACKAGE gets refreshed
-
-  Other options:
-    -h, --help                show usage information
-    -v, --version             print version info and exit
-
-  Examples:
-    tape-watch test/index.js
-    tape-watch test/index.js -p tap-spec
-    tape-watch test/index.js -o '| tap-spec --color'
-
-    # ensure require('jquery') always gets reevaluated
-    tape-watch test/index.js -r jquery
-`, {
+var cli = require('meow')([
+  'Usage:',
+  '  $ tape-watch [file] [options] -- [options for the test]',
+  '',
+  'Options:',
+  '  -p, --pipe PACKAGE        pipe to this package',
+  '  -o, --out CMD             output to this file/cmd',
+  '  -r, --refresh PACKAGE     ensure this PACKAGE gets refreshed',
+  '',
+  'Other options:',
+  '  -h, --help                show usage information',
+  '  -v, --version             print version info and exit',
+  '',
+  'Examples:',
+  '  tape-watch test/index.js',
+  '  tape-watch test/index.js -p tap-spec',
+  '  tape-watch test/index.js -o "| tap-spec --color"',
+  '',
+  '  # ensure require("jquery") always gets reevaluated',
+  '  tape-watch test/index.js -r jquery',
+].join('\n'), {
   boolean: ['help', 'version'],
   string: ['pipe', 'out', 'refresh'],
   '--': true,
