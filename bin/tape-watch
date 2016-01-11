@@ -1,0 +1,65 @@
+#!/usr/bin/env node
+var chokidar = require('chokidar')
+var debounce = require('debounce-collect')
+var path = require('path')
+var once = require('once')
+var debug = require('debug')('tape-watch')
+var mutex = require('../lib/mutex')
+var wait = require('../lib/wait')
+
+var watcher = chokidar.watch('.', {
+  ignored: /[\/\\]\.|node_modules/,
+  persistent: true,
+  ignoreInitial: true
+})
+
+var filename = process.argv[2]
+var cwd = process.cwd()
+process.argv.splice(2, 1)
+
+var report = debounce(mutex(function (files) {
+  debug('start', files.map(function (file) { return file[0] }))
+  return invoke()
+    .then(function (ok) {
+      debug('done')
+    })
+    .catch(function (err) {
+      debug('error')
+      console.error(err.stack || err.message || err)
+    })
+    .then(wait(250))
+    .then(function () {
+      debug('listening again')
+    })
+}), 25)
+
+/*
+ * invoke the test
+ */
+
+var invoke = function () {
+  return new Promise (function (resolve, reject) {
+    flush()
+    var tape = require(path.join(cwd, 'node_modules', 'tape'))
+    tape.onFinish(once(resolve))
+    require(path.join(cwd, filename))
+  })
+}
+
+/*
+ * delete require cache
+ */
+
+function flush () {
+  Object.keys(require.cache).forEach((function (fname) {
+    if (fname.indexOf('node_modules') === -1 ||
+      fname.indexOf('node_modules/tape') > -1) {
+      delete require.cache[fname]
+    }
+  }))
+}
+
+watcher.on('change', report)
+watcher.on('add', report)
+watcher.on('unlink', report)
+report()
