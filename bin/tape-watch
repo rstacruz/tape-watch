@@ -68,7 +68,7 @@ var invoke = function () {
 
     if (cli.flags.pipe) {
       stream = stream.pipe(
-        tryRequire(cli.flags.pipe)())
+        requireHere(cli.flags.pipe)())
     }
 
     if (cli.flags.out) {
@@ -77,23 +77,22 @@ var invoke = function () {
 
     stream.pipe(process.stdout)
     tape().onFinish(once(function () {
+      debug('tape finished')
       tape().getHarness().close()
       resolve()
     }))
+    debug('requiring')
     require(path.join(cwd, filename))
+    debug('requiring done')
   })
 }
 
-function tryRequire (pkg) {
-  try {
-    return require(pkg)
-  } catch (e) {
-    return require(path.join(cwd, 'node_modules', pkg))
-  }
+function requireHere (pkg) {
+  return require(path.join(cwd, 'node_modules', pkg))
 }
 
 function tape () {
-  return tryRequire('tape')
+  return requireHere('tape')
 }
 
 /*
