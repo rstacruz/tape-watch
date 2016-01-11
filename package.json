@@ -18,7 +18,9 @@
     "outpipe": "1.1.1",
     "simpler-debounce": "1.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "tape": "4.4.0"
+  },
   "homepage": "https://github.com/rstacruz/tape-watch#readme",
   "keywords": [
     "tape",
@@ -32,6 +34,6 @@
     "url": "git+https://github.com/rstacruz/tape-watch.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js"
   }
 }
