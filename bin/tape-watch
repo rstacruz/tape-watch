@@ -13,23 +13,27 @@ var cli = require('meow')(`
     $ tape-watch [file] [options] -- [options for the test]
 
   Options:
-    -p, --pipe PACKAGE   pipe to this package
-    -o, --out CMD        output to this file/cmd
+    -p, --pipe PACKAGE        pipe to this package
+    -o, --out CMD             output to this file/cmd
+    -r, --refresh PACKAGE     ensure this PACKAGE gets refreshed
 
   Other options:
-    -h, --help           show usage information
-    -v, --version        print version info and exit
+    -h, --help                show usage information
+    -v, --version             print version info and exit
 
   Examples:
     tape-watch test/index.js
     tape-watch test/index.js -p tap-spec
     tape-watch test/index.js -o '| tap-spec --color'
+
+    # ensure require('jquery') always gets reevaluated
+    tape-watch test/index.js -r jquery
 `, {
   boolean: ['help', 'version'],
-  string: ['pipe', 'out'],
+  string: ['pipe', 'out', 'refresh'],
   '--': true,
   alias: {
-    h: 'help', v: 'version', p: 'pipe', o: 'out'
+    h: 'help', v: 'version', p: 'pipe', o: 'out', r: 'refresh'
   }
 })
 
@@ -102,11 +106,23 @@ function tape () {
 
 function flush () {
   Object.keys(require.cache).forEach((function (fname) {
-    if (fname.indexOf('node_modules') === -1 ||
-      fname.indexOf('node_modules/tape') > -1) {
+    if (fname.indexOf('node_modules') === -1) {
       delete require.cache[fname]
     }
+
+    var mods = ['tape'].concat(toArray(cli.flags.refresh))
+    mods.forEach(function (mod) {
+      if (fname.indexOf(path.join(cwd, mod) + path.sep) > -1 ||
+        fname.indexOf(path.join(cwd, 'node_modules', mod) + path.sep) > -1) {
+        delete require.cache[fname]
+      }
+    })
   }))
+}
+
+function toArray (list) {
+  if (!list) return []
+  return Array.isArray(list) ? list : [ list ]
 }
 
 var watcher = chokidar.watch('.', {

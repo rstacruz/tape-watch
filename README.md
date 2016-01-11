@@ -22,23 +22,25 @@ npm install -g tape-watch
 ## Reference
 
 ```
-Reruns tape tests when files change
-
 Usage:
   $ tape-watch [file] [options] -- [options for the test]
 
 Options:
-  -p, --pipe PACKAGE   pipe to this package
-  -o, --out CMD        output to this file/cmd
+  -p, --pipe PACKAGE        pipe to this package
+  -o, --out CMD             output to this file/cmd
+  -r, --refresh PACKAGE     ensure this PACKAGE gets refreshed
 
 Other options:
-  -h, --help           show usage information
-  -v, --version        print version info and exit
+  -h, --help                show usage information
+  -v, --version             print version info and exit
 
 Examples:
   tape-watch test/index.js
   tape-watch test/index.js -p tap-spec
   tape-watch test/index.js -o '| tap-spec --color'
+
+  # ensure require('jquery') and require('react') always gets reevaluated
+  tape-watch test/index.js -r jquery -r react
 ```
 
 ## Thanks
