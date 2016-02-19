@@ -19,7 +19,7 @@
     "simpler-debounce": "1.0.0"
   },
   "devDependencies": {
-    "standard": "6.0.5",
+    "standard": "6.0.7",
     "tape": "4.4.0",
     "tape-standard": "1.1.0"
   },
