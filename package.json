@@ -10,7 +10,7 @@
     "url": "https://github.com/rstacruz/tape-watch/issues"
   },
   "dependencies": {
-    "chokidar": "1.5.0",
+    "chokidar": "1.5.1",
     "debounce-collect": "1.0.2",
     "debug": "2.2.0",
     "meow": "3.7.0",
