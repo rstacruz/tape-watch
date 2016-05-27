@@ -54,14 +54,8 @@ if (cli.flags.require) {
   requireMany(cli.flags.require)
 }
 
-var report = debounce(mutex(report_), 25)
-  
-/*
- * Invokes and reports.
- */
-
-function report_ (files) {
-  debug('start', files.map(function (file) { return file[0] }))
+var report = debounce(mutex(function (files) {
+  debug('start', files && files.map(function (file) { return file[0] }))
 
   return invoke()
     .then(function (ok) {
@@ -78,20 +72,19 @@ function report_ (files) {
     .then(function () {
       debug('listening again')
     })
-}
+}), 25)
 
 /*
  * invoke the test. installs a tape hook to listen for when tests finish.
  */
 
-var invoke = function () {
+var invoke = function (options) {
   return new Promise (function (resolve, reject) {
     flush()
     var stream = tape().createStream()
 
     if (cli.flags.pipe) {
-      stream = stream.pipe(
-        requireHere(cli.flags.pipe)())
+      stream = stream.pipe(requireHere(cli.flags.pipe)())
     }
 
     if (cli.flags.out) {
@@ -101,7 +94,9 @@ var invoke = function () {
     stream.pipe(process.stdout)
     tape().onFinish(once(function () {
       debug('tape finished')
-      tape().getHarness().close()
+      if (!options || !options.noClose) {
+        try { tape().getHarness().close() } catch (e) {}
+      }
       resolve()
     }))
     debug('requiring')
@@ -173,12 +168,17 @@ function requireMany (modules) {
 if (cli.flags.once) {
   process.on('uncaughtException', function (err) {
     console.error(err.stack || err.message || err)
-    process.exit(1)
+    process.exit(2)
   })
 
-  report_([])
-    .then(function () { process.exit(0) })
-    .catch(function () { process.exit(1) })
+  invoke({ noClose: true })
+    .then(function () {
+      process.exit(0)
+    })
+    .catch(function (err) {
+      console.error(err.stack || err.message || err)
+      process.exit(1)
+    })
 } else {
   process.on('uncaughtException', function (err) {
     console.error(err.stack || err.message || err)
