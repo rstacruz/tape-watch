@@ -15,7 +15,8 @@ var cli = require('meow')([
   'Options:',
   '  -p, --pipe PACKAGE        pipe to this package',
   '  -o, --out CMD             output to this file/cmd',
-  '  -r, --refresh PACKAGE     ensure this PACKAGE gets refreshed',
+  '  -R, --refresh PACKAGE     ensure this PACKAGE gets refreshed',
+  '  -r, --require PACKAGE     require a PACKAGE before startup',
   '',
   'Other options:',
   '  -h, --help                show usage information',
@@ -27,13 +28,14 @@ var cli = require('meow')([
   '  tape-watch test/index.js -o "| tap-spec --color"',
   '',
   '  # ensure require("jquery") always gets reevaluated',
-  '  tape-watch test/index.js -r jquery',
+  '  tape-watch test/index.js -R jquery',
 ].join('\n'), {
   boolean: ['help', 'version'],
-  string: ['pipe', 'out', 'refresh'],
+  string: ['pipe', 'out', 'refresh', 'require'],
   '--': true,
   alias: {
-    h: 'help', v: 'version', p: 'pipe', o: 'out', r: 'refresh'
+    h: 'help', v: 'version', p: 'pipe', o: 'out', R: 'refresh',
+    r: 'require'
   }
 })
 
@@ -41,8 +43,18 @@ var filename = cli.input[0]
 var cwd = process.cwd()
 process.argv = cli.input.slice(1)
 
+if (!filename) {
+  console.error('Usage: tape-watch <filename>')
+  console.error('See `tape-watch --help` for more options.')
+  process.exit(1)
+}
+
+if (cli.flags.require) {
+  requireMany(cli.flags.require)
+}
+
 var report = debounce(mutex(function (files) {
-  debug('start', files.map(function (file) { return file[0] }))
+  debug('start', files && files.map(function (file) { return file[0] }))
 
   return invoke()
     .then(function (ok) {
@@ -65,14 +77,13 @@ var report = debounce(mutex(function (files) {
  * invoke the test. installs a tape hook to listen for when tests finish.
  */
 
-var invoke = function () {
+var invoke = function (options) {
   return new Promise (function (resolve, reject) {
     flush()
     var stream = tape().createStream()
 
     if (cli.flags.pipe) {
-      stream = stream.pipe(
-        requireHere(cli.flags.pipe)())
+      stream = stream.pipe(requireHere(cli.flags.pipe)())
     }
 
     if (cli.flags.out) {
@@ -82,7 +93,7 @@ var invoke = function () {
     stream.pipe(process.stdout)
     tape().onFinish(once(function () {
       debug('tape finished')
-      tape().getHarness().close()
+      try { tape().getHarness().close() } catch (e) {}
       resolve()
     }))
     debug('requiring')
@@ -91,17 +102,25 @@ var invoke = function () {
   })
 }
 
+/*
+ * Requires a package relative to the project dir.
+ */
+
 function requireHere (pkg) {
   return require(path.join(cwd, 'node_modules', pkg))
 }
+
+/*
+ * Returns the `tape` module as the project sees it.
+ */
 
 function tape () {
   return requireHere('tape')
 }
 
 /*
- * delete require cache for any app code (non-modules) and tape itself.
- * we need to clear out tape so that its state is reset.
+ * Delete require cache for any app code (non-modules) and tape itself.
+ * We need to clear out tape so that its state is reset.
  */
 
 function flush () {
@@ -124,6 +143,24 @@ function toArray (list) {
   if (!list) return []
   return Array.isArray(list) ? list : [ list ]
 }
+
+/*
+ * Requires many modules at once.
+ *
+ *     requireMany(['babel-register', 'coffee-script/register'])
+ *     requireMany('babel-register')
+ */
+
+function requireMany (modules) {
+  toArray(modules).forEach(function (mod) {
+    debug('require', mod)
+    requireHere(mod)
+  })
+}
+
+/*
+ * Run
+ */
 
 process.on('uncaughtException', function (err) {
   console.error(err.stack || err.message || err)

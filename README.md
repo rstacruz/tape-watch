@@ -28,7 +28,9 @@ Usage:
 Options:
   -p, --pipe PACKAGE        pipe to this package
   -o, --out CMD             output to this file/cmd
-  -r, --refresh PACKAGE     ensure this PACKAGE gets refreshed
+  -R, --refresh PACKAGE     ensure this PACKAGE gets refreshed
+  -r, --require PACKAGE     require a PACKAGE before startup
+  -1, --once                only run once
 
 Other options:
   -h, --help                show usage information
@@ -41,6 +43,27 @@ Examples:
 
   # ensure require('jquery') and require('react') always gets reevaluated
   tape-watch test/index.js -r jquery -r react
+```
+
+## Using with Babel
+
+Use the `-r` *(--require)* flag with [babel-register](https://www.npmjs.com/package/babel-register).
+
+```sh
+tape-watch -r babel-register
+```
+
+Before you do this, of course, you'll need to install the requisite modules first.
+
+```sh
+npm install --save-dev babel-register babel-preset-es2015
+```
+
+```js
+/* package.json */
+  "babel": {
+    "presets": ["es2015"]
+  }
 ```
 
 ## Thanks
