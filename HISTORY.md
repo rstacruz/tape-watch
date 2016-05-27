@@ -1,8 +1,8 @@
 ## [v2.0.0]
 > May 27, 2016
 
-- #15 - Implement `-r` / `--require` to support preprocessors like Babel. (#26)
-- Implement `-1` / `--once` to supress watching/rerunning behavior. (#26)
+- [#15] - Implement `-r` / `--require` to support preprocessors like Babel. ([#26])
+- Implement `-1` / `--once` to supress watching/rerunning behavior. ([#26])
 - __Breaking:__ `--refresh` is now `-R`, from what used to be `-r`.
 
 [v2.0.0]: https://github.com/rstacruz/tape-watch/compare/v1.3.0...v2.0.0
@@ -34,3 +34,6 @@
 - Initial release.
 
 [v1.0.0]: https://github.com/rstacruz/tape-watch/tree/v1.0.0
+[#15]: https://github.com/rstacruz/tape-watch/issues/15
+[#26]: https://github.com/rstacruz/tape-watch/issues/26
+
