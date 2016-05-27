@@ -3,6 +3,11 @@
   "description": "Reruns tape tests when files change",
   "version": "1.3.0",
   "author": "Rico Sta. Cruz <rico@ricostacruz.com>",
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
   "bin": {
     "tape-watch": "bin/tape-watch"
   },
@@ -19,6 +24,8 @@
     "simpler-debounce": "1.0.0"
   },
   "devDependencies": {
+    "babel-preset-es2015": "6.9.0",
+    "babel-register": "6.9.0",
     "standard": "6.0.8",
     "tape": "4.4.0",
     "tape-standard": "1.1.0"
