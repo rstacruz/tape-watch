@@ -10,7 +10,7 @@ var stream = require('stream')
 
 var cli = require('meow')([
   'Usage:',
-  '  $ tape-watch [file] [options] -- [options for the test]',
+  '  $ tape-watch <files> [options] -- [options for the test]',
   '',
   'Options:',
   '  -p, --pipe PACKAGE        pipe to this package',
@@ -39,11 +39,11 @@ var cli = require('meow')([
   }
 })
 
-var filename = cli.input[0]
+var filenames = cli.input
 var cwd = process.cwd()
 process.argv = cli.input.slice(1)
 
-if (!filename) {
+if (filenames.length === 0) {
   console.error('Usage: tape-watch <filename>')
   console.error('See `tape-watch --help` for more options.')
   process.exit(1)
@@ -96,9 +96,10 @@ var invoke = function (options) {
       try { tape().getHarness().close() } catch (e) {}
       resolve()
     }))
-    debug('requiring')
-    require(path.join(cwd, filename))
-    debug('requiring done')
+    toArray(filenames).forEach(function (fname) {
+      debug('requiring', fname)
+      require(path.join(cwd, fname))
+    })
   })
 }
 

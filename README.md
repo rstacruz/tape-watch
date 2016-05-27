@@ -23,7 +23,7 @@ npm install -g tape-watch
 
 ```
 Usage:
-  $ tape-watch [file] [options] -- [options for the test]
+  $ tape-watch <files> [options] -- [options for the test]
 
 Options:
   -p, --pipe PACKAGE        pipe to this package
