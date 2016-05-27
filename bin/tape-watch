@@ -17,6 +17,7 @@ var cli = require('meow')([
   '  -o, --out CMD             output to this file/cmd',
   '  -R, --refresh PACKAGE     ensure this PACKAGE gets refreshed',
   '  -r, --require PACKAGE     require a PACKAGE before startup',
+  '  -n, --no-watch            only run once',
   '',
   'Other options:',
   '  -h, --help                show usage information',
@@ -141,7 +142,7 @@ function requireMany (modules) {
   if (!Array.isArray(modules)) modules = [modules]
   modules.forEach(function (mod) {
     debug('require', mod)
-    require(mod)
+    requireHere(mod)
   })
 }
 
