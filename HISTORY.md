@@ -1,3 +1,10 @@
+## [v2.0.1]
+> May 28, 2016
+
+- Fix bug when tape-watch is invoked with multiple filenames.
+
+[v2.0.1]: https://github.com/rstacruz/tape-watch/compare/v0.0.0...v2.0.1
+
 ## [v2.0.0]
 > May 27, 2016
 
