@@ -1,3 +1,10 @@
+## [v2.1.0]
+> May 28, 2016
+
+- Add glob support (`tape-watch 'test/**/*.js`).
+
+[v2.1.0]: https://github.com/rstacruz/tape-watch/compare/v2.0.2...v2.1.0
+
 ## [v2.0.2]
 > May 28, 2016
 
