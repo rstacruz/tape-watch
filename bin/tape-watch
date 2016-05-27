@@ -41,6 +41,12 @@ var filename = cli.input[0]
 var cwd = process.cwd()
 process.argv = cli.input.slice(1)
 
+if (!filename) {
+  console.error('Usage: tape-watch <filename>')
+  console.error('See `tape-watch --help` for more options.')
+  process.exit(1)
+}
+
 var report = debounce(mutex(function (files) {
   debug('start', files.map(function (file) { return file[0] }))
 
