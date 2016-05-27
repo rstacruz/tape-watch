@@ -15,7 +15,7 @@ var cli = require('meow')([
   'Options:',
   '  -p, --pipe PACKAGE        pipe to this package',
   '  -o, --out CMD             output to this file/cmd',
-  '  -r, --refresh PACKAGE     ensure this PACKAGE gets refreshed',
+  '  -R, --refresh PACKAGE     ensure this PACKAGE gets refreshed',
   '',
   'Other options:',
   '  -h, --help                show usage information',
@@ -27,13 +27,13 @@ var cli = require('meow')([
   '  tape-watch test/index.js -o "| tap-spec --color"',
   '',
   '  # ensure require("jquery") always gets reevaluated',
-  '  tape-watch test/index.js -r jquery',
+  '  tape-watch test/index.js -R jquery',
 ].join('\n'), {
   boolean: ['help', 'version'],
   string: ['pipe', 'out', 'refresh'],
   '--': true,
   alias: {
-    h: 'help', v: 'version', p: 'pipe', o: 'out', r: 'refresh'
+    h: 'help', v: 'version', p: 'pipe', o: 'out', R: 'refresh'
   }
 })
 

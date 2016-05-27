@@ -28,7 +28,7 @@ Usage:
 Options:
   -p, --pipe PACKAGE        pipe to this package
   -o, --out CMD             output to this file/cmd
-  -r, --refresh PACKAGE     ensure this PACKAGE gets refreshed
+  -R, --refresh PACKAGE     ensure this PACKAGE gets refreshed
 
 Other options:
   -h, --help                show usage information
