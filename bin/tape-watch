@@ -16,6 +16,7 @@ var cli = require('meow')([
   '  -p, --pipe PACKAGE        pipe to this package',
   '  -o, --out CMD             output to this file/cmd',
   '  -R, --refresh PACKAGE     ensure this PACKAGE gets refreshed',
+  '  -r, --require PACKAGE     require a PACKAGE before startup',
   '',
   'Other options:',
   '  -h, --help                show usage information',
@@ -30,10 +31,11 @@ var cli = require('meow')([
   '  tape-watch test/index.js -R jquery',
 ].join('\n'), {
   boolean: ['help', 'version'],
-  string: ['pipe', 'out', 'refresh'],
+  string: ['pipe', 'out', 'refresh', 'require'],
   '--': true,
   alias: {
-    h: 'help', v: 'version', p: 'pipe', o: 'out', R: 'refresh'
+    h: 'help', v: 'version', p: 'pipe', o: 'out', R: 'refresh',
+    r: 'require'
   }
 })
 
@@ -45,6 +47,10 @@ if (!filename) {
   console.error('Usage: tape-watch <filename>')
   console.error('See `tape-watch --help` for more options.')
   process.exit(1)
+}
+
+if (cli.flags.require) {
+  requireMany(cli.flags.require)
 }
 
 var report = debounce(mutex(function (files) {
@@ -129,6 +135,14 @@ function flush () {
 function toArray (list) {
   if (!list) return []
   return Array.isArray(list) ? list : [ list ]
+}
+
+function requireMany (modules) {
+  if (!Array.isArray(modules)) modules = [modules]
+  modules.forEach(function (mod) {
+    debug('require', mod)
+    require(mod)
+  })
 }
 
 process.on('uncaughtException', function (err) {
