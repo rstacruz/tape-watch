@@ -17,7 +17,7 @@ var cli = require('meow')([
   '  -o, --out CMD             output to this file/cmd',
   '  -R, --refresh PACKAGE     ensure this PACKAGE gets refreshed',
   '  -r, --require PACKAGE     require a PACKAGE before startup',
-  '  -n, --no-watch            only run once',
+  '  -1, --once                only run once',
   '',
   'Other options:',
   '  -h, --help                show usage information',
@@ -31,12 +31,12 @@ var cli = require('meow')([
   '  # ensure require("jquery") always gets reevaluated',
   '  tape-watch test/index.js -R jquery',
 ].join('\n'), {
-  boolean: ['help', 'version'],
+  boolean: ['help', 'version', 'once'],
   string: ['pipe', 'out', 'refresh', 'require'],
   '--': true,
   alias: {
     h: 'help', v: 'version', p: 'pipe', o: 'out', R: 'refresh',
-    r: 'require'
+    r: 'require', 1: 'once'
   }
 })
 
@@ -54,7 +54,13 @@ if (cli.flags.require) {
   requireMany(cli.flags.require)
 }
 
-var report = debounce(mutex(function (files) {
+var report = debounce(mutex(report_), 25)
+  
+/*
+ * Invokes and reports.
+ */
+
+function report_ (files) {
   debug('start', files.map(function (file) { return file[0] }))
 
   return invoke()
@@ -72,7 +78,7 @@ var report = debounce(mutex(function (files) {
     .then(function () {
       debug('listening again')
     })
-}), 25)
+}
 
 /*
  * invoke the test. installs a tape hook to listen for when tests finish.
@@ -104,17 +110,25 @@ var invoke = function () {
   })
 }
 
+/*
+ * Requires a package relative to the project dir.
+ */
+
 function requireHere (pkg) {
   return require(path.join(cwd, 'node_modules', pkg))
 }
+
+/*
+ * Returns the `tape` module as the project sees it.
+ */
 
 function tape () {
   return requireHere('tape')
 }
 
 /*
- * delete require cache for any app code (non-modules) and tape itself.
- * we need to clear out tape so that its state is reset.
+ * Delete require cache for any app code (non-modules) and tape itself.
+ * We need to clear out tape so that its state is reset.
  */
 
 function flush () {
@@ -138,25 +152,46 @@ function toArray (list) {
   return Array.isArray(list) ? list : [ list ]
 }
 
+/*
+ * Requires many modules at once.
+ *
+ *     requireMany(['babel-register', 'coffee-script/register'])
+ *     requireMany('babel-register')
+ */
+
 function requireMany (modules) {
-  if (!Array.isArray(modules)) modules = [modules]
-  modules.forEach(function (mod) {
+  toArray(modules).forEach(function (mod) {
     debug('require', mod)
     requireHere(mod)
   })
 }
 
-process.on('uncaughtException', function (err) {
-  console.error(err.stack || err.message || err)
-})
+/*
+ * Run
+ */
 
-var watcher = chokidar.watch('.', {
-  ignored: /[\/\\]\.|node_modules/,
-  persistent: true,
-  ignoreInitial: true
-})
+if (cli.flags.once) {
+  process.on('uncaughtException', function (err) {
+    console.error(err.stack || err.message || err)
+    process.exit(1)
+  })
 
-watcher.on('change', report)
-watcher.on('add', report)
-watcher.on('unlink', report)
-report()
+  report_([])
+    .then(function () { process.exit(0) })
+    .catch(function () { process.exit(1) })
+} else {
+  process.on('uncaughtException', function (err) {
+    console.error(err.stack || err.message || err)
+  })
+
+  var watcher = chokidar.watch('.', {
+    ignored: /[\/\\]\.|node_modules/,
+    persistent: true,
+    ignoreInitial: true
+  })
+
+  watcher.on('change', report)
+  watcher.on('add', report)
+  watcher.on('unlink', report)
+  report()
+}

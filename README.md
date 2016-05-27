@@ -30,6 +30,7 @@ Options:
   -o, --out CMD             output to this file/cmd
   -R, --refresh PACKAGE     ensure this PACKAGE gets refreshed
   -r, --require PACKAGE     require a PACKAGE before startup
+  -1, --once                only run once
 
 Other options:
   -h, --help                show usage information

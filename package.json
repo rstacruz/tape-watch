@@ -43,7 +43,7 @@
     "url": "git+https://github.com/rstacruz/tape-watch.git"
   },
   "scripts": {
-    "test": "node test.js",
-    "test:watch": "./bin/tape-watch -r babel-require test.js"
+    "test": "./bin/tape-watch -r babel-register -1 test.js",
+    "test:watch": "./bin/tape-watch -r babel-register test.js"
   }
 }
