@@ -6,6 +6,7 @@ var once = require('once')
 var debug = require('debug')('tape-watch')
 var mutex = require('../lib/mutex')
 var wait = require('../lib/wait')
+var glob = require('thenify')(require('glob'))
 var stream = require('stream')
 
 var cli = require('meow')([
@@ -96,10 +97,15 @@ var invoke = function (options) {
       try { tape().getHarness().close() } catch (e) {}
       resolve()
     }))
-    toArray(filenames).forEach(function (fname) {
-      debug('requiring', fname)
-      require(path.join(cwd, fname))
-    })
+
+    var globs = Promise.all(toArray(filenames).map(function (spec) {
+      return glob(spec).then(function (files) {
+        files.forEach(function (fname) {
+          debug('requiring', fname)
+          require(path.join(cwd, fname))
+        })
+      })
+    }))
   })
 }
 
