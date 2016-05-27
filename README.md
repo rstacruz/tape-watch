@@ -35,14 +35,19 @@ Options:
 Other options:
   -h, --help                show usage information
   -v, --version             print version info and exit
-
+```
 Examples:
-  tape-watch test/index.js
-  tape-watch test/index.js -p tap-spec
-  tape-watch test/index.js -o '| tap-spec --color'
 
-  # ensure require('jquery') and require('react') always gets reevaluated
-  tape-watch test/index.js -r jquery -r react
+```sh
+tape-watch test/index.js
+tape-watch test/index.js -p tap-spec
+tape-watch test/index.js -o '| tap-spec --color'
+
+# ensure require('jquery') and require('react') always gets reevaluated
+tape-watch test/index.js -r jquery -r react
+
+# run all test files in test/
+tape-watch 'test/**/*.js'
 ```
 
 ## Using with Babel

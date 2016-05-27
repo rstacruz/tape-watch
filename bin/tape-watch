@@ -23,13 +23,8 @@ var cli = require('meow')([
   '  -h, --help                show usage information',
   '  -v, --version             print version info and exit',
   '',
-  'Examples:',
-  '  tape-watch test/index.js',
-  '  tape-watch test/index.js -p tap-spec',
-  '  tape-watch test/index.js -o "| tap-spec --color"',
-  '',
-  '  # ensure require("jquery") always gets reevaluated',
-  '  tape-watch test/index.js -R jquery',
+  'For examples and docs, see:',
+  '  ' + require('../package.json').homepage
 ].join('\n'), {
   boolean: ['help', 'version'],
   string: ['pipe', 'out', 'refresh', 'require'],
