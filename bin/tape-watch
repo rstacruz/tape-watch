@@ -17,7 +17,6 @@ var cli = require('meow')([
   '  -o, --out CMD             output to this file/cmd',
   '  -R, --refresh PACKAGE     ensure this PACKAGE gets refreshed',
   '  -r, --require PACKAGE     require a PACKAGE before startup',
-  '  -1, --once                only run once',
   '',
   'Other options:',
   '  -h, --help                show usage information',
@@ -31,12 +30,12 @@ var cli = require('meow')([
   '  # ensure require("jquery") always gets reevaluated',
   '  tape-watch test/index.js -R jquery',
 ].join('\n'), {
-  boolean: ['help', 'version', 'once'],
+  boolean: ['help', 'version'],
   string: ['pipe', 'out', 'refresh', 'require'],
   '--': true,
   alias: {
     h: 'help', v: 'version', p: 'pipe', o: 'out', R: 'refresh',
-    r: 'require', 1: 'once'
+    r: 'require'
   }
 })
 
@@ -94,9 +93,7 @@ var invoke = function (options) {
     stream.pipe(process.stdout)
     tape().onFinish(once(function () {
       debug('tape finished')
-      if (!options || !options.noClose) {
-        try { tape().getHarness().close() } catch (e) {}
-      }
+      try { tape().getHarness().close() } catch (e) {}
       resolve()
     }))
     debug('requiring')
@@ -165,33 +162,17 @@ function requireMany (modules) {
  * Run
  */
 
-if (cli.flags.once) {
-  process.on('uncaughtException', function (err) {
-    console.error(err.stack || err.message || err)
-    process.exit(2)
-  })
+process.on('uncaughtException', function (err) {
+  console.error(err.stack || err.message || err)
+})
 
-  invoke({ noClose: true })
-    .then(function () {
-      process.exit(0)
-    })
-    .catch(function (err) {
-      console.error(err.stack || err.message || err)
-      process.exit(1)
-    })
-} else {
-  process.on('uncaughtException', function (err) {
-    console.error(err.stack || err.message || err)
-  })
+var watcher = chokidar.watch('.', {
+  ignored: /[\/\\]\.|node_modules/,
+  persistent: true,
+  ignoreInitial: true
+})
 
-  var watcher = chokidar.watch('.', {
-    ignored: /[\/\\]\.|node_modules/,
-    persistent: true,
-    ignoreInitial: true
-  })
-
-  watcher.on('change', report)
-  watcher.on('add', report)
-  watcher.on('unlink', report)
-  report()
-}
+watcher.on('change', report)
+watcher.on('add', report)
+watcher.on('unlink', report)
+report()
