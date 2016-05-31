@@ -7,7 +7,6 @@ var debug = require('debug')('tape-watch')
 var mutex = require('../lib/mutex')
 var wait = require('../lib/wait')
 var glob = require('thenify')(require('glob'))
-var stream = require('stream')
 
 var cli = require('meow')([
   'Usage:',
@@ -74,7 +73,7 @@ var report = debounce(mutex(function (files) {
  */
 
 var invoke = function (options) {
-  return new Promise (function (resolve, reject) {
+  return new Promise(function (resolve, reject) {
     flush()
     var stream = tape().createStream()
 
@@ -93,7 +92,7 @@ var invoke = function (options) {
       resolve()
     }))
 
-    var globs = Promise.all(toArray(filenames).map(function (spec) {
+    Promise.all(toArray(filenames).map(function (spec) {
       return glob(spec).then(function (files) {
         files.forEach(function (fname) {
           debug('requiring', fname)
@@ -101,6 +100,7 @@ var invoke = function (options) {
         })
       })
     }))
+    .catch(reject)
   })
 }
 
@@ -126,7 +126,7 @@ function tape () {
  */
 
 function flush () {
-  Object.keys(require.cache).forEach((function (fname) {
+  Object.keys(require.cache).forEach(function (fname) {
     if (fname.indexOf('node_modules') === -1) {
       delete require.cache[fname]
     }
@@ -138,7 +138,7 @@ function flush () {
         delete require.cache[fname]
       }
     })
-  }))
+  })
 }
 
 function toArray (list) {
