@@ -19,6 +19,22 @@ test('things', function (t) {
 
 test('eslint', require('eslint-engine/tape')())
 
+test('globstar works', function (t) {
+  var proc = spawnTest(['fixtures/**/test_*.@(js|jsx|es6)'], function (output) {
+    t.equal(output.stderr, '', 'no stderr')
+    var out = output.stdout
+    t.ok(out.indexOf('ran test/test_js.js'), 'ran test_js.js')
+    t.ok(out.indexOf('ran test/a/test_es6.es6'), 'ran test_es6.es6')
+    t.ok(out.indexOf('ran test/b/test_jsx.jsx'), 'ran test_jsx.jsx')
+    t.equal(output.code, null, 'exited successfully')
+    t.end()
+  })
+
+  setTimeout(function () {
+    proc.kill('SIGHUP')
+  }, 1000)
+})
+
 function spawnTest (args, fn) {
   var proc = spawn('./bin/tape-watch', args)
   var output = { stdout: '', stderr: '', code: undefined }
