@@ -74,32 +74,40 @@ var report = debounce(mutex(function (files) {
 
 var invoke = function (options) {
   return new Promise(function (resolve, reject) {
-    flush()
-    var stream = tape().createStream()
-
-    if (cli.flags.pipe) {
-      stream = stream.pipe(requireHere(cli.flags.pipe)())
-    }
-
-    if (cli.flags.out) {
-      stream = stream.pipe(require('outpipe')(cli.flags.out))
-    }
-
-    stream.pipe(process.stdout)
-    tape().onFinish(once(function () {
-      debug('tape finished')
-      try { tape().getHarness().close() } catch (e) {}
-      resolve()
-    }))
-
+    debug('filenames:', filenames)
+    var required = []
     Promise.all(toArray(filenames).map(function (spec) {
       return glob(spec).then(function (files) {
         files.forEach(function (fname) {
-          debug('requiring', fname)
-          require(path.join(cwd, fname))
+          debug('processed', fname)
+          required.push(path.join(cwd, fname))
         })
       })
     }))
+    .then(function () {
+      debug('filename processing finished')
+      flush()
+      var stream = tape().createStream()
+
+      if (cli.flags.pipe) {
+        stream = stream.pipe(requireHere(cli.flags.pipe)())
+      }
+
+      if (cli.flags.out) {
+        stream = stream.pipe(require('outpipe')(cli.flags.out))
+      }
+
+      stream.pipe(process.stdout)
+      tape().onFinish(once(function () {
+        debug('tape finished')
+        try { tape().getHarness().close() } catch (e) {}
+        resolve()
+      }))
+      required.forEach(function (fpath) {
+        debug('requiring test', fpath)
+        require(fpath)
+      })
+    })
     .catch(reject)
   })
 }
