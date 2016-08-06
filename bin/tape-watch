@@ -100,7 +100,7 @@ var invoke = function (options) {
       const files = glob.sync(spec)
       files.forEach(function (fname) {
         debug('requiring', fname)
-        require(path.join(cwd, fname))
+        require(path.resolve(cwd, fname))
       })
     })
   })
