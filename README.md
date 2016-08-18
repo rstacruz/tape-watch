@@ -84,6 +84,11 @@ Add this to your `package.json`:
 
 You can now run tests with `npm test`, or make it auto-run with `npm test -- --watch`.
 
+## Also see
+
+- [tape-growl](https://www.npmjs.com/package/tape-growl) for notifications on macOS
+- [tape-plus](https://www.npmjs.com/package/tape-plus) for grouping tape tests
+
 ## Thanks
 
 **tape-watch** © 2016+, Rico Sta. Cruz. Released under the [MIT] License.<br>
