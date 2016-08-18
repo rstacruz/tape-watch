@@ -50,7 +50,7 @@
     "url": "git+https://github.com/rstacruz/tape-watch.git"
   },
   "scripts": {
-    "test": "./bin/tape-watch -r babel-register -1 test.js",
+    "test": "./bin/tape-watch -r babel-register -1 test/*",
     "lint": "eslint-check"
   }
 }

@@ -18,6 +18,7 @@ var cli = require('meow')([
   '  -R, --refresh PACKAGE     ensure this PACKAGE gets refreshed',
   '  -r, --require PACKAGE     require a PACKAGE before startup',
   '  -1, --once                only run once',
+  '  -w, --watch               cancels out --once',
   '',
   'Other options:',
   '  -h, --help                show usage information',
@@ -167,7 +168,7 @@ function requireMany (modules) {
  * Run
  */
 
-if (cli.flags.once) {
+if (cli.flags.once && !cli.flags.watch) {
   process.on('uncaughtException', function (err) {
     console.error(err.stack || err.message || err)
     process.exit(2)
