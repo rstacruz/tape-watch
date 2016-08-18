@@ -1,3 +1,11 @@
+## [v2.2.0]
+> Aug 18, 2016
+
+- Add support for `-1` / `--once` to only run tests once.
+- Add support for `-w` / `--watch` to cancel out `--once`; useful for using tape-watch as the `npm test` script.
+
+[v2.2.0]: https://github.com/rstacruz/tape-watch/compare/v2.1.0...v2.2.0
+
 ## [v2.1.0]
 > May 28, 2016
 
