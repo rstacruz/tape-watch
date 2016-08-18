@@ -76,7 +76,7 @@ npm install --save-dev babel-register babel-preset-es2015
 
 Add this to your `package.json`:
 
-```
+```js
   "scripts": {
     "test": "tape-watch -1 test/*"
   }
