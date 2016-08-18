@@ -31,6 +31,7 @@ Options:
   -R, --refresh PACKAGE     ensure this PACKAGE gets refreshed
   -r, --require PACKAGE     require a PACKAGE before startup
   -1, --once                only run once
+  -w, --watch               cancel out --once
 
 Other options:
   -h, --help                show usage information
@@ -70,6 +71,18 @@ npm install --save-dev babel-register babel-preset-es2015
     "presets": ["es2015"]
   }
 ```
+
+## Adding `npm test`
+
+Add this to your `package.json`:
+
+```
+  "scripts": {
+    "test": "tape-watch -1 test/*"
+  }
+```
+
+You can now run tests with `npm test`, or make it auto-run with `npm test -- --watch`.
 
 ## Thanks
 
