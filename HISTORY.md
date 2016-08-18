@@ -1,15 +1,22 @@
+## [v2.2.2]
+> Aug 18, 2016
+
+- [#51] - Fix globs not being re-interpreted on changes. ([#57], [@tuckeconnelly])
+
+[v2.2.2]: https://github.com/rstacruz/tape-watch/compare/v2.2.1...v2.2.2
+
 ## [v2.2.1]
 > Aug 18, 2016
 
-- Fix bug where running stops when there's an unhandled exception.
+- [#19] - Fix bug where running stops when there's an unhandled exception.
 
 [v2.2.1]: https://github.com/rstacruz/tape-watch/compare/v2.2.0...v2.2.1
 
 ## [v2.2.0]
 > Aug 18, 2016
 
-- Add support for `-1` / `--once` to only run tests once.
-- Add support for `-w` / `--watch` to cancel out `--once`; useful for using tape-watch as the `npm test` script.
+- [#53] - Add support for `-1` / `--once` to only run tests once.
+- [#53] - Add support for `-w` / `--watch` to cancel out `--once`; useful for using tape-watch as the `npm test` script.
 
 [v2.2.0]: https://github.com/rstacruz/tape-watch/compare/v2.1.0...v2.2.0
 
@@ -64,4 +71,8 @@
 [v1.0.0]: https://github.com/rstacruz/tape-watch/tree/v1.0.0
 [#15]: https://github.com/rstacruz/tape-watch/issues/15
 [#26]: https://github.com/rstacruz/tape-watch/issues/26
-
+[#51]: https://github.com/rstacruz/tape-watch/issues/51
+[#57]: https://github.com/rstacruz/tape-watch/issues/57
+[#19]: https://github.com/rstacruz/tape-watch/issues/19
+[#53]: https://github.com/rstacruz/tape-watch/issues/53
+[@tuckeconnelly]: https://github.com/tuckeconnelly
