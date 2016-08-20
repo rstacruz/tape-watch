@@ -1,3 +1,10 @@
+## [v2.2.3]
+> Aug 20, 2016
+
+- Remove stray debugging text.
+
+[v2.2.3]: https://github.com/rstacruz/tape-watch/compare/v2.2.2...v2.2.3
+
 ## [v2.2.2]
 > Aug 18, 2016
 
