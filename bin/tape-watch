@@ -191,7 +191,6 @@ if (cli.flags.once && !cli.flags.watch) {
     ignoreInitial: true
   })
 
-  watcher.on('change', () => { console.log('==> change') })
   watcher.on('change', report)
   watcher.on('add', report)
   watcher.on('unlink', report)
