@@ -19,6 +19,7 @@ var cli = require('meow')([
   '  -r, --require PACKAGE     require a PACKAGE before startup',
   '  -1, --once                only run once',
   '  -w, --watch               cancel out --once',
+  '  -c, --clear               clear console between test runs',
   '',
   'Other options:',
   '  -h, --help                show usage information',
@@ -27,12 +28,12 @@ var cli = require('meow')([
   'For examples and docs, see:',
   '  ' + require('../package.json').homepage
 ].join('\n'), {
-  boolean: ['help', 'version', 'once'],
+  boolean: ['help', 'version', 'once', 'clear'],
   string: ['pipe', 'out', 'refresh', 'require'],
   '--': true,
   alias: {
     h: 'help', v: 'version', p: 'pipe', o: 'out', R: 'refresh',
-    r: 'require', 1: 'once'
+    r: 'require', 1: 'once', c: 'clear'
   }
 })
 
@@ -52,7 +53,10 @@ if (cli.flags.require) {
 
 var report = debounce(mutex(function (files) {
   debug('start', files && files.map(function (file) { return file[0] }))
-
+  if (cli.flags.clear) {
+    // Trigger a console clear command
+    console.log('\u001b[2J\u001b[0;0H')
+  }
   return invoke()
     .then(function (ok) {
       debug('done')
