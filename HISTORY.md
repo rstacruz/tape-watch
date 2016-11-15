@@ -1,3 +1,10 @@
+## [v2.2.4]
+> Nov 15, 2016
+
+- [#67] - Fix support for absolute paths. ([@tuckerconnelly])
+
+[v2.2.4]: https://github.com/rstacruz/tape-watch/compare/v2.2.3...v2.2.4
+
 ## [v2.2.3]
 > Aug 20, 2016
 
@@ -8,7 +15,7 @@
 ## [v2.2.2]
 > Aug 18, 2016
 
-- [#51] - Fix globs not being re-interpreted on changes. ([#57], [@tuckeconnelly])
+- [#51] - Fix globs not being re-interpreted on changes. ([#57], [@tuckerconnelly])
 
 [v2.2.2]: https://github.com/rstacruz/tape-watch/compare/v2.2.1...v2.2.2
 
@@ -82,4 +89,5 @@
 [#57]: https://github.com/rstacruz/tape-watch/issues/57
 [#19]: https://github.com/rstacruz/tape-watch/issues/19
 [#53]: https://github.com/rstacruz/tape-watch/issues/53
-[@tuckeconnelly]: https://github.com/tuckeconnelly
+[#67]: https://github.com/rstacruz/tape-watch/issues/67
+[@tuckerconnelly]: https://github.com/tuckerconnelly
