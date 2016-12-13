@@ -19,6 +19,7 @@ var cli = require('meow')([
   '  -r, --require PACKAGE     require a PACKAGE before startup',
   '  -1, --once                only run once',
   '  -w, --watch               cancel out --once',
+  '  -d, --directory-to-watch  watch on changes only in this dirrectory, default to current dir (\'.\')',
   '',
   'Other options:',
   '  -h, --help                show usage information',
@@ -28,11 +29,11 @@ var cli = require('meow')([
   '  ' + require('../package.json').homepage
 ].join('\n'), {
   boolean: ['help', 'version', 'once'],
-  string: ['pipe', 'out', 'refresh', 'require'],
+  string: ['pipe', 'out', 'refresh', 'require', 'directory-to-watch'],
   '--': true,
   alias: {
     h: 'help', v: 'version', p: 'pipe', o: 'out', R: 'refresh',
-    r: 'require', 1: 'once'
+    r: 'require', 1: 'once', d: 'directory-to-watch'
   }
 })
 
@@ -185,7 +186,7 @@ if (cli.flags.once && !cli.flags.watch) {
     console.error(err.stack || err.message || err)
   })
 
-  var watcher = chokidar.watch('.', {
+  var watcher = chokidar.watch(cli.flags.directoryToWatch || '.', {
     ignored: /[\/\\]\.|node_modules/,
     persistent: true,
     ignoreInitial: true
