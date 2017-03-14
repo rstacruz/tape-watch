@@ -32,6 +32,7 @@ Options:
   -r, --require PACKAGE     require a PACKAGE before startup
   -1, --once                only run once
   -w, --watch               cancel out --once
+  -c, --clear               clear console between test runs
 
 Other options:
   -h, --help                show usage information
