@@ -1,3 +1,10 @@
+## [v2.3.0]
+> Mar 15, 2017
+
+- [#116] - Add `--clear` option. ([@lsanwick])
+
+[v2.3.0]: https://github.com/rstacruz/tape-watch/compare/v2.2.4...v2.3.0
+
 ## [v2.2.4]
 > Nov 15, 2016
 
@@ -91,3 +98,5 @@
 [#53]: https://github.com/rstacruz/tape-watch/issues/53
 [#67]: https://github.com/rstacruz/tape-watch/issues/67
 [@tuckerconnelly]: https://github.com/tuckerconnelly
+[#116]: https://github.com/rstacruz/tape-watch/issues/116
+[@lsanwick]: https://github.com/lsanwick
