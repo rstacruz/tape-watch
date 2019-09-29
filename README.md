@@ -54,7 +54,7 @@ tape-watch 'test/**/*.js'
 
 ## Using with Babel
 
-Use the `-r` *(--require)* flag with [babel-register](https://www.npmjs.com/package/babel-register).
+Use the `-r` *(--require)* flag with [babel-register](https://www.npmjs.com/package/babel-register) or [@babel/register](https://www.npmjs.com/package/@babel/register).
 
 ```sh
 tape-watch -r babel-register
